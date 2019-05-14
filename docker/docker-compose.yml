@@ -1,0 +1,10 @@
+version: '3'
+services:
+  astros:
+    build: ../.
+    ports:
+     - "5000:5000"
+#    volumes:
+#     - .:/code
+  mongodb:
+    image: "mongo:4.0.4"

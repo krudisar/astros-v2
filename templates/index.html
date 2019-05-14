@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>People in Space</title>
+
+    <style>
+
+      @font-face { font-family: JuneBug; src: url('/static/JUNEBUG.TTF'); } 
+      @font-face { font-family: Nasa; src: url('/static/nasalization-rg.TTF'); } 
+      @font-face { font-family: DigitalTech; src: url('/static/Digital_tech.otf'); }
+      @font-face { font-family: DigitalReadout; src: url('/static/SFDigitalReadout-Medium.ttf'); }
+
+      h1 {
+         font-family: JuneBug;
+         color: gray;
+      }
+
+      h2 {
+         font-family: DigitalReadout;
+         color: yellow;
+      }
+
+      h3 {
+         font-family: Nasa;
+         color: green;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial;
+        font-size: 17px;
+      }
+
+      .container {
+        position: relative;
+        max-width: 100%;
+        max-height: 100%;
+        margin: 0 auto;
+      }
+
+      .container img {vertical-align: middle;}
+
+      .container .content {
+        position: absolute;
+        top: 0;
+        background: rgb(0, 0, 0); /* Fallback color */
+        background: rgba(0, 0, 0, 0.1 ); /* Black background with 0.5 opacity */
+        color: #f1f1f1;
+        width: 100%;
+        padding: 5px;
+      }
+
+    </style>
+
+  </head>
+
+  <body bgcolor="black">
+
+      <div class="container">
+        <a href=/test><img src="/static/space3.jpg" alt="Space View" style="width:100%;"></a>
+        <div class="content">
+          <h2>DATE:{{ current_date }}  -  HOSTNAME:{{ hostname }}</h2>
+        </div>
+      </div>
+
+  </body>
+
+
+</html>

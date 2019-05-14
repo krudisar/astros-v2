@@ -1,0 +1,6 @@
+
+# 
+CACHE_API_REQUESTS=0
+CACHE_IMAGES_IN_DB=1
+#
+python3 app.py

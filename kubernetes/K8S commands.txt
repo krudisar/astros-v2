@@ -1,0 +1,76 @@
+K8S commands
+
+
+??? kubectl patch ....
+??? kubectl edit ....
+
+kubectl apply -f package/flask_deployment.yml
+kubectl apply -f package/flask_service.yml
+
+
+kubectl describe deployment flask
+kubectl describe service flask
+
+kubectl edit deployment flask
+kubectl edit service flask
+
+kubectl scale --replicas=4 deployment/flask
+
+
+kubectl delete service flask
+kubectl delete deployment flask
+
+get external port number for k8s service (replace flask with your service name)
+ kubectl get svc flask -o=jsonpath='{.spec.ports[?(@.port==5000)].nodePort}'
+
+get list of k8s node's IP addresses
+  kubectl get node -o=jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].add'
+-> can be used for external LB config
+
+
+https://stackoverflow.com/questions/37648553/is-there-anyway-to-get-the-external-ports-of-the-kubernetes-cluster
+
+UPDATE EXISTING DEPLOYMENT
+
+execute the two commands:
+
+kubectl set image deployment/flask flask=krudisar/flask:latest
+kubectl set image deployment/flask flask=krudisar/flask
+
+Jenkins cmd line - 
+==================
+kubectl --user="kube-user" --server="https://kubemaster.example.com"  --token=$ACCESS_TOKEN set image deployment/my-deployment mycontainer=myimage:"$BUILD_NUMBER-$SHORT_GIT_COMMIT"
+
+
+#!/bin/bash
+#
+# discoverService - extract the externally visible Node-IP and port for a specific Service in Kubernetes
+#
+KUBECTL=kubectl
+#
+if [[ $# < 2 || "$1" == "-h" ]]
+    then
+    echo discoverService SERVICENAME INTERNALPORT
+    exit -1
+fi
+SERVICENAME=$1
+INTERNALPORT=$2
+
+EXTPORT=`${KUBECTL} get svc $SERVICENAME -o=jsonpath="{.spec.ports[?(@.port==${INTERNALPORT})].nodePort}"`
+
+EXTIP=`${KUBECTL} get node -o=jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}'`
+
+
+if [[ -z $EXTPORT ]]
+    then
+    echo -e "ERROR: service=$SERVICENAME internal-port=$INTERNALPORT not found.\n"
+    exit -2
+elif [[ -z $EXTIP ]]
+    then
+    echo -e "ERROR: could not retrieve underlying node IPs.\n"
+    exit -2
+fi
+# Success...
+echo $EXTIP:$EXTPORT
+
+
