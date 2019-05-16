@@ -109,18 +109,24 @@ def processAstros(json_object):
 
 		record_from_db = astronauts.find(search_string)
 		
-		if (_OPTIMIZED_PHOTOS_RETRIEVAL_ and (record_from_db.count() > 0)):
+		if _OPTIMIZED_PHOTOS_RETRIEVAL_: 
 			
-			astro = Astronaut(record_from_db[0]["name"], record_from_db[0]["craft"], record_from_db[0]["photo_url"])
-			x.append(astro)
+			if (record_from_db.count() > 0):
+			
+				astro = Astronaut(record_from_db[0]["name"], record_from_db[0]["craft"], record_from_db[0]["photo_url"])
+				x.append(astro)
+
+			else:
+
+				item["photo_url"] = get_image_url(item['name'])
+				x.append(item)
+
+				astro = Astronaut(item["name"], item["craft"], item['photo_url'])
+				result = astronauts.insert_one(astro.to_document())
 
 		else:
-
 			item["photo_url"] = get_image_url(item['name'])
 			x.append(item)
-
-			astro = Astronaut(item["name"], item["craft"], item['photo_url'])
-			result = astronauts.insert_one(astro.to_document())
 
 	return x
 
@@ -130,7 +136,7 @@ def get_none():
 	#global client 
 	global astronauts
 
-	if _MONGODB_SERVER_READY_:
+	if _OPTIMIZED_PHOTOS_RETRIEVAL_:
 		res = astronauts.find({},{"name":1, "craft":1, "photo_url":1, "_id":0})
 		dump = json.dumps([doc for doc in res], sort_keys=False, indent=4, default=json_util.default)
 		return dump
